@@ -4,13 +4,10 @@ import sys
 import string
 import re
 
-print 'This python script transforms html-formatted google docs to standard wikicode'
 def getAttribute(parent_match):
-  str = parent_match.group()
-  attr_regex = re.compile('</{0,1}[a-zA-Z0-9]*[> ]')
-  attr = attr_regex.search(str).group()
-  attr = string.strip(attr,'</ >')
-  return attr
+  tag = parent_match.group()
+  attr_regex = re.compile('</{0,1}([a-zA-Z0-9]*)[> ]')
+  return attr_regex.match(tag).group(1)
 
 def getClass(line, match_object):
   fulltag = line[match_object.start():match_object.end()]
@@ -83,7 +80,6 @@ def getOutput(line):
   iterator = tagRegex.finditer(line)
   stack = [] # stack of match objects
   output = [] # list of wikicode lines
-  content = True # The content must be between an opening and a closing tag. This boolean keeps track of this.
 
   prev = "" # Keeps track of the previous tag
   for match in iterator:
@@ -97,13 +93,12 @@ def getOutput(line):
        end = match.start()  #The end of the content is the beginning of the closing tag 
        if prev == cur:
          output.append(wikicode(line, stack, start, end))
-       stack.pop()
+       stack.pop() # this could be useful for debugging later
   return output
 
-# Get .html file
+# File I/O
 html = raw_input('Enter .html file: ')
 txt = raw_input('Enter output file: ')
-print 'Translating %(html)s to wiki format\n' % vars()
 
 input_file = open(html, 'r')
 line = input_file.readline() # LOL Google Docs output html as a single line
@@ -114,5 +109,3 @@ output_file = open(txt, 'w')
 output_file.write('\n'.join(output))
 output_file.write('\n')
 output_file.close()
-
-print 'Done\n'
