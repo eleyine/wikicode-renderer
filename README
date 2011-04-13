@@ -1,0 +1,9 @@
+Python script
+
+1. Obtain .html formatted Google Doc with File/Download as../HTML
+2. Run wikicode.py
+3. You will be prompted for the .html input file and the .txt output file to be created
+
+STATUS: Debugging - The general idea is there though
+
+PROJECT: create a web app that takes the url of the google doc
