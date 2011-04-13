@@ -30,7 +30,8 @@ def wikicode(line, stack, start, end):
              'h3':['===', '==='],
              'h2':['==', '=='],
              'h1':['=','='],
-             'p': ['','']
+             'p': ['',''],
+             'a': ['','']
             # pretty short I know..
              }
   oldict = {
@@ -47,6 +48,7 @@ def wikicode(line, stack, start, end):
   while parent not in wikidict.keys():
     i = i - 1;
     if -i >= len(stack):
+      return ""
       break
     parent_match = stack[i]
     parent = getAttribute(parent_match)
@@ -90,7 +92,6 @@ def getOutput(line):
      else:
        end = match.start()  #The end of the content is the beginning of the closing tag 
        if prev == cur:
-         print line[start:end]
          output.append(wikicode(line, stack, start, end))
        else:
          print '%(prev)s and %(cur)s do not match' %vars()
