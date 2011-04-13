@@ -58,7 +58,11 @@ def wikicode(line, stack, start, end):
   if parent in wikidict:
     format = wikidict[parent]
     if parent == 'ol':
-       degree = oldict[getClass(line, parent_match)]
+       classCode = getClass(line, parent_match)
+       if classCode in oldict:
+          degree = oldict[classCode]
+       else:
+          degree = 0
        left = format[0] * degree
     else:
        left = format[0]
@@ -93,23 +97,22 @@ def getOutput(line):
        end = match.start()  #The end of the content is the beginning of the closing tag 
        if prev == cur:
          output.append(wikicode(line, stack, start, end))
-       else:
-         print '%(prev)s and %(cur)s do not match' %vars()
        stack.pop()
   return output
 
 # Get .html file
-#html = raw_input('Enter .html file:')
-#txt = raw_input('Enter output file:')
-#print 'Starting parsing of %(html)s\n' % vars()
+html = raw_input('Enter .html file: ')
+txt = raw_input('Enter output file: ')
+print 'Translating %(html)s to wiki format\n' % vars()
 
-html = 'SimpleDoc.html'
-file = open(html, 'rt')
-line = file.readline() # LOL Google Docs output html as a single line
-file.close()
+input_file = open(html, 'r')
+line = input_file.readline() # LOL Google Docs output html as a single line
+input_file.close()
 output = getOutput(line)
 
-for wikiline in output:
-  print wikiline
+output_file = open(txt, 'w')
+output_file.write('\n'.join(output))
+output_file.write('\n')
+output_file.close()
 
 print 'Done\n'
